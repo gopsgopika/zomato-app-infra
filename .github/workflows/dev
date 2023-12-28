@@ -1,50 +1,44 @@
----
-name: "Dev Infra Build"
+name: "Github Action Packer"
 
 on:
-  repository_dispatch:
-    types: [ dev-event ]
-
   push:
     branches:
       - dev
-    
+
+  repository_dispatch:
+    types: [ dev-event ]
+
+
 jobs:
-    
+
+
   build:
     runs-on: ubuntu-latest
-
     steps:
-
       - name: "Repository Checkout"
         uses: actions/checkout@v3
 
-
-      - name: "Terraform Installation"
+      - name: "Terraform installation"
         uses: hashicorp/setup-terraform@v2
         with:
-          terraform_version: 1.6.2
-     
-      - name: Terraform init
+          terraform_version: "1.6.2"
+
+
+      - name: Terraform Init
         run: |
-           terraform init \
+            terraform init \
                -backend-config="bucket=${{ secrets.DEV_S3_BUCKET }}" \
                -backend-config="key=terraform.tfstate" \
                -backend-config="region=ap-south-1" \
-               -backend-config="access_key=${{ secrets.DEV_AWS_KEY_ID }}" \
-               -backend-config="secret_key=${{ secrets.DEV_SECRET_ID }}" \
-  
-            
-            
+               -backend-config="access_key= ${{ secrets.DEV_AWS_KEY_ID }}" \
+               -backend-config="secret_key= ${{ secrets.DEV_SECRET_ID }}" \
+
       - name: Terraform fmt
         run: terraform fmt
 
-        
-          
-      - name: Terraform validate
-        run: terraform validate
 
-        
+      - name: Terraform Validate
+        run: terraform validate
 
       - name: Terraform plan
         run: terraform plan -var-file=dev.tfvars
@@ -52,14 +46,19 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.DEV_AWS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.DEV_SECRET_ID }}
           AWS_REGION: "us-east-2"
-        
-        
+
+
       - name: Terraform apply
-        run: |
-           terraform apply \
+        run : |
+              terraform apply \
               -auto-approve \
-              -var-file=dev.tfvars
+              -var-file=dev.tfvars 
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.DEV_AWS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.DEV_SECRET_ID }}
           AWS_REGION: "us-east-2"
+        
+      - name: "List Current working directory"
+        run: |
+          pwd
+          ls -al
