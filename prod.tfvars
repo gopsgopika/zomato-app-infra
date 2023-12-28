@@ -1,0 +1,7 @@
+instance_type    = "t2.micro"
+project_name     = "Shopping-app"
+project_env      = "Prod"
+hosted_zone_name = "glearns.online"
+hostname         = "Shoppingapp"
+project_own      = "Gopika"
+hosted_zone_id   = "Z0310337WL1FVNUILYGU"
