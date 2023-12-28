@@ -1,4 +1,4 @@
-name: "Github Action Packer"
+name: "Github Action Packer-prod"
 
 on:
   push:
@@ -18,19 +18,21 @@ jobs:
       - name: "Terraform installation"
         uses: hashicorp/setup-terraform@v2
         with:
-          terraform_version: "1.6.5"
+          terraform_version: "1.6.2"
 
-      - name: Terraform fmt
-        run: terraform fmt
 
       - name: Terraform Init
         run: |
             terraform init \
-               -backend-config="bucket=${{ secrets.PROD_S3_BUCKET}}" \
+               -backend-config="bucket=${{ secrets.PROD_S3_BUCKET }}" \
                -backend-config="key=terraform.tfstate" \
-               -backend-config="region=${{ secrets.PROD_AWS_REGION }}" \
-               -backend-config="access_key= ${{ secrets.PROD_AWS_KEY_ID }}" \
-               -backend-config="secret_key= ${{ secrets.PROD_SECRET_ID }}" \
+               -backend-config="region=ap-south-1" \
+               -backend-config="access_key=${{ secrets.PROD_AWS_KEY_ID }}" \
+               -backend-config="secret_key=${{ secrets.PROD_SECRET_ID }}" \
+
+      - name: Terraform fmt
+        run: terraform fmt
+
 
       - name: Terraform Validate
         run: terraform validate
@@ -40,7 +42,7 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.PROD_AWS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.PROD_SECRET_ID }}
-          AWS_DEFAULT_REGION: ${{ secrets.PROD_AWS_REGION }}
+          AWS_REGION: "ap-south-1"
 
 
       - name: Terraform apply
@@ -51,7 +53,7 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.PROD_AWS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.PROD_SECRET_ID }}
-          AWS_DEFAULT_REGION: ${{ secrets.PROD_AWS_REGION }}
+          AWS_REGION: "ap-south-1"
         
       - name: "List Current working directory"
         run: |
