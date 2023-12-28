@@ -21,7 +21,7 @@ jobs:
       - name: "Terraform installation"
         uses: hashicorp/setup-terraform@v2
         with:
-          terraform_version: "1.6.5"
+          terraform_version: "1.6.2"
 
       - name: Terraform fmt
         run: terraform fmt
@@ -31,6 +31,7 @@ jobs:
             terraform init \
                -backend-config="bucket=${{ secrets.DEV_S3_BUCKET }}" \
                -backend-config="key=terraform.tfstate" \
+               -backend-config="region=ap-south-1" \
                -backend-config="access_key= ${{ secrets.DEV_AWS_KEY_ID }}" \
                -backend-config="secret_key= ${{ secrets.DEV_SECRET_ID }}" \
 
@@ -42,7 +43,7 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.DEV_AWS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.DEV_SECRET_ID }}
-          AWS_DEFAULT_REGION: ${{ secrets.DEV_AWS_REGION }}
+          AWS_DEFAULT_REGION: "us-east-2"
 
 
       - name: Terraform apply
@@ -53,7 +54,7 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.DEV_AWS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.DEV_SECRET_ID }}
-          AWS_DEFAULT_REGION: ${{ secrets.DEV_AWS_REGION }}
+          AWS_DEFAULT_REGION:"us-east-2"
         
       - name: "List Current working directory"
         run: |
