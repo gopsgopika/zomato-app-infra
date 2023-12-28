@@ -6,7 +6,7 @@ on:
       - dev
 
   repository_dispatch:
-  types: [ dev-event ]
+    types: [ dev-event ]
 
 
 jobs:
