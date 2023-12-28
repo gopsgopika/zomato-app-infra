@@ -82,6 +82,6 @@ resource "aws_route53_record" "shopping-app" {
   zone_id = var.hosted_zone_id
   name    = "${var.hostname}.${var.hosted_zone_name}"
   type    = "A"
-  ttl     = 50
+  ttl     = 100
   records = [aws_instance.shopping_app.public_ip]
 }
