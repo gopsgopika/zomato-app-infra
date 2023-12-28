@@ -23,8 +23,6 @@ jobs:
         with:
           terraform_version: "1.6.2"
 
-      - name: Terraform fmt
-        run: terraform fmt
 
       - name: Terraform Init
         run: |
@@ -34,6 +32,10 @@ jobs:
                -backend-config="region=ap-south-1" \
                -backend-config="access_key= ${{ secrets.DEV_AWS_KEY_ID }}" \
                -backend-config="secret_key= ${{ secrets.DEV_SECRET_ID }}" \
+
+      - name: Terraform fmt
+        run: terraform fmt
+
 
       - name: Terraform Validate
         run: terraform validate
